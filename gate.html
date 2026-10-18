@@ -379,7 +379,7 @@
     el.label.textContent = isCode ? "激活码" : "提货口令";
     el.hint.textContent = isCode
       ? "16 位，格式是 XHS-XXXX-XXXX-XXXX，不区分大小写。"
-      : "口令是卖家发给你的那一串字母数字，输入后当场领一个专属码。";
+      : "卖家发给你的那串字母数字，输完当场领一个专属码。";
     el.input.value = "";
     el.input.classList.remove("is-error");
     el.input.placeholder = isCode ? "XHS-XXXX-XXXX-XXXX" : "XHS-XXXX";
