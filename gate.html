@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0c0b">
+<meta name="robots" content="noindex, nofollow">
+<title>授权激活 · 测评实验室</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/license.js"></script>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    --page-bg: #0a0c0b;
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 20px calc(28px + env(safe-area-inset-bottom));
+    background:
+      radial-gradient(120% 70% at 50% -10%, rgba(198,249,74,.13), transparent 62%),
+      radial-gradient(90% 60% at 50% 110%, rgba(120,200,255,.06), transparent 60%),
+      #0a0c0b;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #eaf0e9;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: none;
+  }
+
+  .g-wrap { width: 100%; max-width: 430px; }
+
+  /* ---------- 头部 ---------- */
+  .g-eyebrow {
+    display: flex; align-items: center; gap: 9px;
+    font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .22em; color: #7d8a80; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .g-eyebrow::before {
+    content: ""; width: 22px; height: 1px; background: #c6f94a; opacity: .8;
+  }
+
+  .g-title {
+    margin: 0 0 12px;
+    font-size: 34px; line-height: 1.15; font-weight: 800;
+    letter-spacing: -.02em;
+  }
+  .g-title em { font-style: normal; color: #c6f94a; }
+
+  .g-sub {
+    margin: 0 0 26px;
+    font-size: 14.5px; line-height: 1.75; color: #8b978e;
+  }
+
+  /* ---------- 卡片 ---------- */
+  .g-card {
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 22px;
+    padding: 22px 20px 20px;
+    box-shadow: 0 30px 70px -34px rgba(0,0,0,.9);
+    backdrop-filter: blur(10px);
+  }
+
+  /* ---------- 切换 ---------- */
+  .g-tabs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
+    padding: 4px; margin-bottom: 20px;
+    background: rgba(0,0,0,.28);
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 13px;
+  }
+  .g-tab {
+    appearance: none; border: 0; cursor: pointer;
+    padding: 10px 6px; border-radius: 10px;
+    background: transparent; color: #7d8a80;
+    font: 600 13px/1 inherit; font-family: inherit;
+    transition: .18s;
+  }
+  .g-tab[aria-selected="true"] {
+    background: rgba(198,249,74,.14);
+    color: #c6f94a;
+    box-shadow: inset 0 0 0 1px rgba(198,249,74,.28);
+  }
+
+  /* ---------- 输入 ---------- */
+  .g-label {
+    display: block; margin-bottom: 9px;
+    font-size: 12.5px; font-weight: 600; color: #8b978e;
+    letter-spacing: .02em;
+  }
+
+  .g-input {
+    width: 100%; appearance: none;
+    padding: 16px 16px;
+    background: rgba(0,0,0,.36);
+    border: 1.5px solid rgba(255,255,255,.13);
+    border-radius: 14px;
+    color: #eaf0e9;
+    font: 600 18px/1.3 ui-monospace, SFMono-Regular, Menlo, "Courier New", monospace;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s;
+  }
+  .g-input::placeholder {
+    color: #4d5852; letter-spacing: .05em; font-weight: 500;
+  }
+  .g-input:focus {
+    border-color: rgba(198,249,74,.55);
+    box-shadow: 0 0 0 4px rgba(198,249,74,.1);
+  }
+  .g-input.is-error {
+    border-color: rgba(255,106,106,.6);
+    box-shadow: 0 0 0 4px rgba(255,106,106,.09);
+  }
+
+  .g-hint {
+    margin: 9px 2px 0;
+    font-size: 12px; line-height: 1.6; color: #6b7770;
+  }
+
+  /* ---------- 按钮 ---------- */
+  .g-btn {
+    width: 100%; appearance: none; border: 0; cursor: pointer;
+    margin-top: 18px;
+    padding: 17px 18px; border-radius: 14px;
+    background: #c6f94a; color: #0a0c0b;
+    font: 700 15.5px/1 inherit; font-family: inherit;
+    letter-spacing: .01em;
+    transition: transform .14s, opacity .18s, filter .18s;
+  }
+  .g-btn:hover { filter: brightness(1.06); }
+  .g-btn:active { transform: scale(.985); }
+  .g-btn:disabled { opacity: .5; cursor: default; transform: none; filter: none; }
+
+  /* ---------- 状态 ---------- */
+  .g-msg {
+    display: none;
+    margin-top: 14px; padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 13px; line-height: 1.65;
+    border: 1px solid transparent;
+  }
+  .g-msg.show { display: block; }
+  .g-msg.err {
+    background: rgba(255,106,106,.09);
+    border-color: rgba(255,106,106,.28);
+    color: #ff9b9b;
+  }
+  .g-msg.ok {
+    background: rgba(198,249,74,.09);
+    border-color: rgba(198,249,74,.3);
+    color: #c6f94a;
+  }
+  .g-msg.warn {
+    background: rgba(255,190,80,.09);
+    border-color: rgba(255,190,80,.28);
+    color: #ffcf7a;
+  }
+
+  /* ---------- 成功面板 ---------- */
+  .g-done { display: none; text-align: center; }
+  .g-done.show { display: block; }
+  .g-done-ico {
+    width: 54px; height: 54px; margin: 0 auto 16px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: rgba(198,249,74,.13);
+    border: 1px solid rgba(198,249,74,.35);
+    color: #c6f94a;
+  }
+  .g-done-ico svg { width: 26px; height: 26px; }
+  .g-done h2 {
+    margin: 0 0 8px; font-size: 21px; font-weight: 800; letter-spacing: -.01em;
+  }
+  .g-done p { margin: 0 0 18px; font-size: 13.5px; line-height: 1.7; color: #8b978e; }
+
+  .g-codebox {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px 16px; margin-bottom: 6px;
+    background: rgba(0,0,0,.4);
+    border: 1px dashed rgba(198,249,74,.35);
+    border-radius: 13px;
+    font: 700 16px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: .06em; color: #eaf0e9;
+    word-break: break-all;
+  }
+  .g-copy {
+    flex: 0 0 auto; appearance: none; border: 0; cursor: pointer;
+    background: rgba(198,249,74,.14); color: #c6f94a;
+    padding: 7px 11px; border-radius: 8px;
+    font: 600 11.5px/1 inherit; font-family: inherit;
+  }
+  .g-copy:active { opacity: .7; }
+
+  .g-tip {
+    margin: 12px 0 0; font-size: 12px; line-height: 1.65; color: #6b7770;
+  }
+
+  /* ---------- 页脚 ---------- */
+  .g-foot {
+    margin-top: 22px; text-align: center;
+    font-size: 12px; line-height: 1.9; color: #5d6862;
+  }
+  .g-foot b { color: #8b978e; font-weight: 600; }
+
+  /* ---------- 已激活条 ---------- */
+  .g-active {
+    display: none;
+    margin-bottom: 16px; padding: 12px 15px;
+    border-radius: 13px;
+    background: rgba(198,249,74,.08);
+    border: 1px solid rgba(198,249,74,.22);
+    font-size: 13px; line-height: 1.6; color: #b9d98c;
+  }
+  .g-active.show { display: block; }
+  .g-active b { color: #c6f94a; }
+
+  .g-link {
+    color: #c6f94a; text-decoration: none;
+    border-bottom: 1px solid rgba(198,249,74,.35);
+  }
+
+  @media (max-width: 380px) {
+    .g-title { font-size: 29px; }
+    .g-input { font-size: 16px; padding: 15px 13px; }
+    .g-codebox { font-size: 14px; }
+  }
+</style>
+</head>
+<body data-theme="archive">
+
+<div class="g-wrap">
+
+  <div class="g-eyebrow">LICENSE GATE</div>
+  <h1 class="g-title">激活<em>授权</em></h1>
+  <p class="g-sub">这一页是入口。输入你收到的码，一次激活，四份测评全部解锁。</p>
+
+  <div class="g-active" id="activeBar">
+    当前设备已激活 · 套餐 <b id="activePlan">标准版</b>
+  </div>
+
+  <!-- ============ 表单区 ============ -->
+  <div class="g-card" id="formCard">
+
+    <div class="g-tabs" role="tablist">
+      <button class="g-tab" role="tab" id="tabCode" aria-selected="true">我有激活码</button>
+      <button class="g-tab" role="tab" id="tabBatch" aria-selected="false">我有提货口令</button>
+    </div>
+
+    <label class="g-label" id="inputLabel" for="codeInput">激活码</label>
+    <input class="g-input" id="codeInput" type="text" inputmode="text"
+           autocomplete="off" autocapitalize="characters" spellcheck="false"
+           placeholder="XHS-XXXX-XXXX-XXXX" maxlength="19">
+    <div class="g-hint" id="inputHint">16 位，格式是 XHS-XXXX-XXXX-XXXX，不区分大小写。</div>
+
+    <button class="g-btn" id="submitBtn">激活并开始</button>
+
+    <div class="g-msg" id="msg"></div>
+  </div>
+
+  <!-- ============ 成功区 ============ -->
+  <div class="g-card g-done" id="doneCard">
+    <div class="g-done-ico">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"
+           stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+    </div>
+    <h2 id="doneTitle">激活成功</h2>
+    <p id="doneSub">这台设备已经记住了，下次直接打开就行，不用再输。</p>
+
+    <div class="g-codebox">
+      <span id="doneCode">XHS-0000-0000-0000</span>
+      <button class="g-copy" id="copyBtn">复制</button>
+    </div>
+    <p class="g-tip" id="doneTip">建议把这个码截图存下来。换手机或换浏览器时还要用。</p>
+
+    <button class="g-btn" id="goBtn">进入测评</button>
+  </div>
+
+  <div class="g-foot">
+    遇到问题？截图发给卖家，<b>报订单号即可补发或解绑</b>。<br>
+    本页仅用于授权校验，不收集你的任何个人信息。
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var L = window.LICENSE;
+
+  var qs = new URLSearchParams(location.search);
+  var back = qs.get("back") || "";
+  var why  = qs.get("why")  || "";
+
+  // back 必须是站内绝对路径，防止被拿去做跳转钓鱼
+  if (back.charAt(0) !== "/" || back.indexOf("//") === 0 || back.indexOf("://") > -1) {
+    back = location.pathname.replace(/[^/]*$/, "") + "index.html";
+  }
+  if (location.pathname + location.search === back) {
+    back = location.pathname.replace(/[^/]*$/, "") + "index.html";
+  }
+
+  var $ = function (id) { return document.getElementById(id); };
+  var el = {
+    tabCode: $("tabCode"), tabBatch: $("tabBatch"),
+    label: $("inputLabel"), hint: $("inputHint"), input: $("codeInput"),
+    btn: $("submitBtn"), msg: $("msg"),
+    formCard: $("formCard"), doneCard: $("doneCard"),
+    doneTitle: $("doneTitle"), doneSub: $("doneSub"), doneCode: $("doneCode"),
+    doneTip: $("doneTip"), copyBtn: $("copyBtn"), goBtn: $("goBtn"),
+    activeBar: $("activeBar"), activePlan: $("activePlan")
+  };
+
+  var mode = "code";   // code | batch
+  var busy = false;
+
+  /* ---------- 文案 ---------- */
+  var ERR = {
+    not_found:      "这个码不存在。检查一下有没有输错，或者找卖家核对订单。",
+    app_mismatch:   "这个码不是这个网站的。每个网站的码是分开的，请用你买的那份。",
+    batch_app_mismatch: "这个提货口令不是这个网站的。请用卖家发给你的那个网址打开。",
+    disabled:       "这个码已经被停用了。如果是误封，请联系卖家恢复。",
+    expired:        "这个码已过期。可以找卖家续期。",
+    device_limit:   "这个码绑定的设备数已经满了。联系卖家解绑一台就能继续用。",
+    not_bound:      "这台设备还没有绑定过这个码，请在原来的设备上使用，或联系卖家解绑。",
+    batch_not_found:"提货口令不对。口令在卖家发给你的那条消息里，注意大小写。",
+    batch_closed:   "这个提货口令已暂停使用，请联系卖家。",
+    batch_empty:    "这一批已经领完了。请联系卖家补一批新的口令。",
+    too_many:       "尝试次数太多，请等 1 分钟再试。",
+    bad_device:     "浏览器环境异常，换个浏览器或关掉无痕模式再试。",
+    bad_batch:      "请先填提货口令。",
+    gen_failed:     "服务器忙，请稍后重试。",
+    network:        "网络不通，检查一下网络再试一次。",
+    unconfigured:   "授权系统还没配置好。"
+  };
+
+  var WHY = {
+    need:    { t: "先激活，再开始", k: "warn" },
+    expired: { t: "授权已过期", k: "warn" },
+    disabled:{ t: "授权已停用", k: "err"  },
+    device_limit: { t: "设备数已满", k: "err" }
+  };
+
+  /* ---------- 显示消息 ---------- */
+  function say(text, kind) {
+    if (!text) {
+      el.msg.className = "g-msg";
+      el.msg.textContent = "";
+      return;
+    }
+    el.msg.className = "g-msg show " + (kind || "err");
+    el.msg.textContent = text;
+  }
+
+  function fail(reason) {
+    var text = ERR[reason] || "激活失败，请重试或联系卖家。";
+    say(text, "err");
+    el.input.classList.add("is-error");
+    el.btn.disabled = false;
+    busy = false;
+    if (reason === "device_limit" || reason === "not_bound") {
+      el.doneTip.textContent = "需要解绑？把订单号发给卖家，30 秒处理好。";
+    }
+  }
+
+  /* ---------- Tab 切换 ---------- */
+  function setMode(m) {
+    mode = m;
+    var isCode = m === "code";
+    el.tabCode.setAttribute("aria-selected", isCode ? "true" : "false");
+    el.tabBatch.setAttribute("aria-selected", isCode ? "false" : "true");
+    el.label.textContent = isCode ? "激活码" : "提货口令";
+    el.hint.textContent = isCode
+      ? "16 位，格式是 XHS-XXXX-XXXX-XXXX，不区分大小写。"
+      : "口令是卖家发给你的那一串字母数字，输入后当场领一个专属码。";
+    el.input.value = "";
+    el.input.classList.remove("is-error");
+    el.input.placeholder = isCode ? "XHS-XXXX-XXXX-XXXX" : "XHS-XXXX";
+    el.input.maxLength = isCode ? 19 : 24;
+    el.btn.textContent = isCode ? "激活并开始" : "领取我的激活码";
+    say("");
+    el.input.focus();
+  }
+
+  el.tabCode.addEventListener("click", function () { setMode("code"); });
+  el.tabBatch.addEventListener("click", function () { setMode("batch"); });
+
+  /* ---------- 输入自动格式化 ---------- */
+  el.input.addEventListener("input", function () {
+    el.input.classList.remove("is-error");
+    if (mode !== "code") return;
+
+    var raw = el.input.value;
+    var caretEnd = el.input.selectionStart === el.input.value.length;
+    var f = L.formatCode ? L.formatCode(raw) : raw.toUpperCase();
+    el.input.value = f;
+    if (caretEnd) {
+      try { el.input.setSelectionRange(f.length, f.length); } catch (e) {}
+    }
+  });
+
+  el.input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") { e.preventDefault(); submit(); }
+  });
+
+  /* ---------- 提交 ---------- */
+  function submit() {
+    if (busy) return;
+
+    if (!L || !L.enabled) {
+      say(ERR.unconfigured, "err");
+      return;
+    }
+
+    var val = (el.input.value || "").trim();
+    if (!val) {
+      say(mode === "code" ? "先把激活码填上。" : "先把提货口令填上。", "err");
+      el.input.focus();
+      return;
+    }
+
+    busy = true;
+    el.btn.disabled = true;
+    el.btn.textContent = "正在校验…";
+    say("");
+
+    var p = mode === "code"
+      ? L.rpc("license_redeem", { p_code: val, p_device: L.device, p_app: L.app, p_ua: navigator.userAgent })
+      : L.rpc("license_claim",  { p_batch: val, p_device: L.device, p_app: L.app, p_ua: navigator.userAgent });
+
+    p.then(function (r) {
+      el.btn.textContent = mode === "code" ? "激活并开始" : "领取我的激活码";
+
+      if (!r || !r.ok) { fail((r && r.reason) || "network"); return; }
+
+      var token = { code: r.code, device: L.device, plan: r.plan || "basic", ts: Date.now() };
+      L.saveToken(token);
+      L.code = r.code;
+      L.plan = token.plan;
+
+      done(r);
+    }).catch(function (e) {
+      el.btn.textContent = mode === "code" ? "激活并开始" : "领取我的激活码";
+      if (String(e && e.message || "").indexOf("HTTP") === 0) {
+        fail("network");
+      } else {
+        fail("network");
+      }
+    });
+  }
+
+  el.btn.addEventListener("click", submit);
+
+  /* ---------- 成功 ---------- */
+  function done(r) {
+    busy = false;
+    el.btn.disabled = false;
+    el.formCard.style.display = "none";
+    el.doneCard.classList.add("show");
+
+    el.doneCode.textContent = r.code;
+    el.doneTitle.textContent = r.again ? "欢迎回来" : (mode === "batch" ? "领取成功" : "激活成功");
+    el.doneSub.textContent = r.again
+      ? "这台设备之前就激活过，直接进去就行。"
+      : "这台设备已经记住了，下次直接打开就行，不用再输。";
+
+    var expText = "长期有效。";
+    if (r.expires_at) {
+      var d = new Date(r.expires_at);
+      expText = "有效期到 " + d.getFullYear() + "-" +
+                ("0" + (d.getMonth() + 1)).slice(-2) + "-" +
+                ("0" + d.getDate()).slice(-2) + "。";
+    }
+    if (r.max_runs) {
+      el.doneTip.textContent = expText + "每个测评各能测 " + r.max_runs +
+        " 次。建议截图存下来，换设备时还要用。";
+    } else {
+      el.doneTip.textContent = expText + "建议把码截图存下来，换设备时还要用。";
+    }
+
+    var n = 3;
+    el.goBtn.textContent = "进入测评（" + n + "）";
+    var timer = setInterval(function () {
+      n--;
+      if (n <= 0) {
+        clearInterval(timer);
+        location.replace(back);
+      } else {
+        el.goBtn.textContent = "进入测评（" + n + "）";
+      }
+    }, 1000);
+  }
+
+  el.goBtn.addEventListener("click", function () { location.replace(back); });
+
+  /* ---------- 复制 ---------- */
+  el.copyBtn.addEventListener("click", function () {
+    var text = el.doneCode.textContent;
+    function ok() {
+      el.copyBtn.textContent = "已复制";
+      setTimeout(function () { el.copyBtn.textContent = "复制"; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok).catch(fallback);
+    } else {
+      fallback();
+    }
+    function fallback() {
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.cssText = "position:fixed;opacity:0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        ok();
+      } catch (e) {}
+    }
+  });
+
+  /* ---------- 初始化 ---------- */
+  (function init() {
+    if (!L || !L.enabled) {
+      say(ERR.unconfigured + " 请先在 assets/license.js 里填写 supabaseUrl 和 anon key。", "err");
+      el.btn.disabled = true;
+      return;
+    }
+
+    var t = L.loadToken();
+    if (t && t.code) {
+      el.activeBar.classList.add("show");
+      el.activePlan.textContent = t.plan === "pro" ? "高级版" : (t.plan === "vip" ? "全解锁" : "标准版");
+    }
+
+    if (why && WHY[why]) {
+      var extra = ERR[why];
+      say(extra ? WHY[why].t + " · " + extra : WHY[why].t, WHY[why].k);
+    }
+
+    el.input.focus();
+  })();
+})();
+</script>
+
+</body>
+</html>
