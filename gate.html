@@ -240,7 +240,7 @@
 
   <div class="g-eyebrow">LICENSE GATE</div>
   <h1 class="g-title">激活<em>授权</em></h1>
-  <p class="g-sub">刚拍下就点右边「我有提货口令」；已经领过码的，在左边直接输。</p>
+  <p class="g-sub">把卖家发给你的码输进来。一次开通，四份测评全部解锁，每份各能测 3 次。</p>
 
   <div class="g-active" id="activeBar">
     当前设备已激活 · 套餐 <b id="activePlan">标准版</b>
@@ -249,18 +249,13 @@
   <!-- ============ 表单区 ============ -->
   <div class="g-card" id="formCard">
 
-    <div class="g-tabs" role="tablist">
-      <button class="g-tab" role="tab" id="tabCode" aria-selected="true">我有激活码</button>
-      <button class="g-tab" role="tab" id="tabBatch" aria-selected="false">我有提货口令</button>
-    </div>
-
     <label class="g-label" id="inputLabel" for="codeInput">激活码</label>
     <input class="g-input" id="codeInput" type="text" inputmode="text"
            autocomplete="off" autocapitalize="characters" spellcheck="false"
-           placeholder="XHS-XXXX-XXXX-XXXX" maxlength="19">
-    <div class="g-hint" id="inputHint">16 位，格式是 XHS-XXXX-XXXX-XXXX，不区分大小写。</div>
+           placeholder="XHS-Q3K7" maxlength="24">
+    <div class="g-hint" id="inputHint">卖家发给你的那串，直接粘进来，长短都行。</div>
 
-    <button class="g-btn" id="submitBtn">激活并开始</button>
+    <button class="g-btn" id="submitBtn">开始测试</button>
 
     <div class="g-msg" id="msg"></div>
   </div>
@@ -309,7 +304,6 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var el = {
-    tabCode: $("tabCode"), tabBatch: $("tabBatch"),
     label: $("inputLabel"), hint: $("inputHint"), input: $("codeInput"),
     btn: $("submitBtn"), msg: $("msg"),
     formCard: $("formCard"), doneCard: $("doneCard"),
@@ -318,21 +312,21 @@
     activeBar: $("activeBar"), activePlan: $("activePlan")
   };
 
-  var mode = "code";   // code | batch
+  var mode = "code";   // 自动判断：code = 完整激活码 / batch = 提货口令。只影响文案
   var busy = false;
 
   /* ---------- 文案 ---------- */
   var ERR = {
     not_found:      "这个码不存在。检查一下有没有输错，或者找卖家核对订单。",
     app_mismatch:   "这个码不是这个网站的。每个网站的码是分开的，请用你买的那份。",
-    batch_app_mismatch: "这个提货口令不是这个网站的。请用卖家发给你的那个网址打开。",
+    batch_app_mismatch: "这个码不是这个网站的。请在卖家给你的那个网址上激活。",
     disabled:       "这个码已经被停用了。如果是误封，请联系卖家恢复。",
     expired:        "这个码已过期。可以找卖家续期。",
     device_limit:   "这个码绑定的设备数已经满了。联系卖家解绑一台就能继续用。",
     not_bound:      "这台设备还没有绑定过这个码，请在原来的设备上使用，或联系卖家解绑。",
-    batch_not_found:"提货口令不对。口令在卖家发给你的那条消息里，注意大小写。",
-    batch_closed:   "这个提货口令已暂停使用，请联系卖家。",
-    batch_empty:    "这一批已经领完了。请联系卖家补一批新的口令。",
+    batch_not_found:"这个码不对。检查一下有没有输错，或者找卖家核对订单。",
+    batch_closed:   "这个码已暂停使用，请联系卖家。",
+    batch_empty:    "这一批已经领完了。请联系卖家补一批新的。",
     too_many:       "尝试次数太多，请等 1 分钟再试。",
     bad_device:     "浏览器环境异常，换个浏览器或关掉无痕模式再试。",
     bad_batch:      "请先填提货口令。",
@@ -370,39 +364,20 @@
     }
   }
 
-  /* ---------- Tab 切换 ---------- */
-  function setMode(m) {
-    mode = m;
-    var isCode = m === "code";
-    el.tabCode.setAttribute("aria-selected", isCode ? "true" : "false");
-    el.tabBatch.setAttribute("aria-selected", isCode ? "false" : "true");
-    el.label.textContent = isCode ? "激活码" : "提货口令";
-    el.hint.textContent = isCode
-      ? "16 位，格式是 XHS-XXXX-XXXX-XXXX，不区分大小写。"
-      : "卖家发给你的那串字母数字，输完当场领一个专属码。";
-    el.input.value = "";
-    el.input.classList.remove("is-error");
-    el.input.placeholder = isCode ? "XHS-XXXX-XXXX-XXXX" : "XHS-XXXX";
-    el.input.maxLength = isCode ? 19 : 24;
-    el.btn.textContent = isCode ? "激活并开始" : "领取我的激活码";
-    say("");
-    el.input.focus();
-  }
-
-  el.tabCode.addEventListener("click", function () { setMode("code"); });
-  el.tabBatch.addEventListener("click", function () { setMode("batch"); });
-
-  /* ---------- 输入自动格式化 ---------- */
+  /* ---------- 输入处理 ----------
+     只转大写，不自动插横线：后端解析时会忽略横线，
+     插横线反而会把短口令切断（XHS-BSITE → XHS-BSIT-E） */
   el.input.addEventListener("input", function () {
     el.input.classList.remove("is-error");
-    if (mode !== "code") return;
 
     var raw = el.input.value;
     var caretEnd = el.input.selectionStart === el.input.value.length;
-    var f = L.formatCode ? L.formatCode(raw) : raw.toUpperCase();
-    el.input.value = f;
-    if (caretEnd) {
-      try { el.input.setSelectionRange(f.length, f.length); } catch (e) {}
+    var f = raw.toUpperCase();
+    if (f !== raw) {
+      el.input.value = f;
+      if (caretEnd) {
+        try { el.input.setSelectionRange(f.length, f.length); } catch (e) {}
+      }
     }
   });
 
@@ -410,7 +385,19 @@
     if (e.key === "Enter") { e.preventDefault(); submit(); }
   });
 
-  /* ---------- 提交 ---------- */
+  /* ---------- 提交 ----------
+     一个输入框，长短都能认：
+       短的那串（如 XHS-Q3K7）= 提货口令 → 当场换一个专属激活码
+       长的那串（XHS-XXXX-XXXX-XXXX）= 完整激活码 → 直接激活
+     认错了也不要紧：第一次没找到，会自动换另一种再试一次。 */
+  var BTN_TEXT = "开始测试";
+
+  function callRpc(asBatch, val) {
+    return asBatch
+      ? L.rpc("license_claim", { p_batch: val, p_device: L.device, p_app: L.app, p_ua: navigator.userAgent })
+      : L.rpc("license_redeem", { p_code: val, p_device: L.device, p_app: L.app, p_ua: navigator.userAgent });
+  }
+
   function submit() {
     if (busy) return;
 
@@ -421,7 +408,7 @@
 
     var val = (el.input.value || "").trim();
     if (!val) {
-      say(mode === "code" ? "先把激活码填上。" : "先把提货口令填上。", "err");
+      say("先把码填上。", "err");
       el.input.focus();
       return;
     }
@@ -431,12 +418,25 @@
     el.btn.textContent = "正在校验…";
     say("");
 
-    var p = mode === "code"
-      ? L.rpc("license_redeem", { p_code: val, p_device: L.device, p_app: L.app, p_ua: navigator.userAgent })
-      : L.rpc("license_claim",  { p_batch: val, p_device: L.device, p_app: L.app, p_ua: navigator.userAgent });
+    // 去掉横线数长度：XHS-Q3K7 = 7 位，XHS-XXXX-XXXX-XXXX = 15 位
+    var norm = val.replace(/[^A-Za-z0-9]/g, "");
+    var asBatch = norm.length <= 8;
+    mode = asBatch ? "batch" : "code";
 
-    p.then(function (r) {
-      el.btn.textContent = mode === "code" ? "激活并开始" : "领取我的激活码";
+    callRpc(asBatch, val).then(function (r) {
+      var miss = !r || r.reason === "not_found" || r.reason === "batch_not_found";
+      if (!miss) return r;
+
+      // 长短判断可能认错方向（比如你开的批次口令特别长），换另一种再试一次。
+      // 只有换过去成功了才算数，否则保留第一次那个更准的错误。
+      var other = !asBatch;
+      mode = other ? "batch" : "code";
+      return callRpc(other, val).then(function (r2) {
+        if (r2 && r2.ok) return r2;
+        return r;
+      });
+    }).then(function (r) {
+      el.btn.textContent = BTN_TEXT;
 
       if (!r || !r.ok) { fail((r && r.reason) || "network"); return; }
 
@@ -446,13 +446,9 @@
       L.plan = token.plan;
 
       done(r);
-    }).catch(function (e) {
-      el.btn.textContent = mode === "code" ? "激活并开始" : "领取我的激活码";
-      if (String(e && e.message || "").indexOf("HTTP") === 0) {
-        fail("network");
-      } else {
-        fail("network");
-      }
+    }).catch(function () {
+      el.btn.textContent = BTN_TEXT;
+      fail("network");
     });
   }
 
@@ -539,10 +535,6 @@
       el.activeBar.classList.add("show");
       el.activePlan.textContent = t.plan === "pro" ? "高级版" : (t.plan === "vip" ? "全解锁" : "标准版");
     }
-
-    // 新买家进来默认停在「提货口令」——他们手上只有口令，没有码。
-    // 已经有码的人会自己点左边那个 tab。
-    if (!t || !t.code) setMode("batch");
 
     if (why && WHY[why]) {
       var extra = ERR[why];
