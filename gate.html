@@ -240,7 +240,7 @@
 
   <div class="g-eyebrow">LICENSE GATE</div>
   <h1 class="g-title">激活<em>授权</em></h1>
-  <p class="g-sub">这一页是入口。输入你收到的码，一次激活，四份测评全部解锁。</p>
+  <p class="g-sub">刚拍下就点右边「我有提货口令」；已经领过码的，在左边直接输。</p>
 
   <div class="g-active" id="activeBar">
     当前设备已激活 · 套餐 <b id="activePlan">标准版</b>
@@ -539,6 +539,10 @@
       el.activeBar.classList.add("show");
       el.activePlan.textContent = t.plan === "pro" ? "高级版" : (t.plan === "vip" ? "全解锁" : "标准版");
     }
+
+    // 新买家进来默认停在「提货口令」——他们手上只有口令，没有码。
+    // 已经有码的人会自己点左边那个 tab。
+    if (!t || !t.code) setMode("batch");
 
     if (why && WHY[why]) {
       var extra = ERR[why];
