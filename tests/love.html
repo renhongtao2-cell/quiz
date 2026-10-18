@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fdf6f4">
+<title>亲密关系说明书 · 你在爱里是哪种人</title>
+<meta name="description" content="12 道题，测出你在亲密关系里的安全感、距离感和表达方式。">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/license.js"></script>
+</head>
+<body data-theme="rose">
+
+<div class="shell">
+  <div class="topbar" id="topbar">
+    <button class="back" aria-label="上一题">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="brand">亲密关系说明书</div>
+    <div class="counter">01 / 12</div>
+  </div>
+  <div class="progress" id="progress"><i></i></div>
+  <div id="app"></div>
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script>
+createQuiz({
+  slug: "love",
+  theme: "rose",
+  eyebrow: "RELATIONSHIP MANUAL",
+  title: "亲密关系<br>说明书",
+  lede: "不是测你适合什么样的人，是测你在关系里会变成什么样的人。12 道题，给你一份关于自己的使用说明——包括那些你从来不说出口的部分。",
+  metaMain: "12 道题 · 约 1 分钟",
+  metaExtra: ["6 种关系模式", "可存图", "纯娱乐"],
+  coverList: [
+    "按<b>你实际会做的</b>选，不是按你觉得对的选。",
+    "结果包含<b>安全感、表达需求、独立度</b>三个维度。",
+    "没有「不好」的类型，只有没被理解的需求。"
+  ],
+  coverFoot: "本测试借用依恋理论的通俗表述，但不是专业心理量表。",
+  resultLabel: "关系说明书 · MANUAL",
+  dimLabel: "关系指标",
+  traitsLabel: "关系特征",
+  posterBrand: "亲密关系说明书",
+  posterLabel: "RELATIONSHIP MANUAL",
+  posterCta: "你在爱里是哪种人？→",
+  posterFoot: "仅供娱乐 · 不是专业量表",
+  posterPairCta: "你们也来测一测 →",
+  hashtags: ["#恋爱人格", "#依恋类型", "#亲密关系", "#心理测试"],
+
+  questions: [
+    { q: "对方三个小时没回你消息，你——",
+      opts: [
+        { t: "大概在忙吧，等他有空再说", s: { steady: 2, island: 1 } },
+        { t: "开始翻聊天记录，找自己哪句话说错了", s: { radar: 2, ledger: 1 } },
+        { t: "没注意，我那时候也在做自己的事", s: { island: 2, steady: 1 } },
+        { t: "会担心，但不会说，怕显得黏人", s: { bank: 2, radar: 1 } }
+      ] },
+
+    { q: "在关系里，你最常说的一句话是——",
+      opts: [
+        { t: "「我需要一点自己的时间」", s: { island: 2, switch: 1 } },
+        { t: "「你想吃什么？我都行」", s: { bank: 2, ledger: 1 } },
+        { t: "「我们最近是不是有点远了」", s: { switch: 2, radar: 1 } },
+        { t: "「上次也是我让的」", s: { ledger: 2, bank: 1 } }
+      ] },
+
+    { q: "对方情绪不好，但没说是为什么，你会——",
+      opts: [
+        { t: "先不追问，等他愿意说；但那几天我会自动降温", s: { switch: 2, island: 1 } },
+        { t: "会想是不是我哪里没做好", s: { ledger: 2, radar: 1 } },
+        { t: "问一句「需要我做什么吗」，然后等他说", s: { steady: 2, bank: 1 } },
+        { t: "会一直问，直到他说出来", s: { radar: 2, ledger: 1 } }
+      ] },
+
+    { q: "吵完架之后，你通常——",
+      opts: [
+        { t: "要当场解决，不然一晚上睡不着", s: { radar: 2, ledger: 1 } },
+        { t: "需要先冷静一会儿，然后再谈", s: { steady: 2, island: 1 } },
+        { t: "先道歉，即使不全是我的问题", s: { bank: 2, steady: 1 } },
+        { t: "会消失一段时间，等情绪过去", s: { island: 2, switch: 1 } }
+      ] },
+
+    { q: "你最容易在什么时候想逃——",
+      opts: [
+        { t: "对方要求「什么都告诉他」的时候", s: { island: 2, switch: 1 } },
+        { t: "我付出很多但没被看见的时候", s: { bank: 2, ledger: 1 } },
+        { t: "关系太稳定，稳定到我开始怀疑的时候", s: { switch: 2, island: 1 } },
+        { t: "又一次觉得「不公平」的时候", s: { ledger: 2, bank: 1 } }
+      ] },
+
+    { q: "对方说「和你在一起很安心」，你——",
+      opts: [
+        { t: "我信，因为我确实一直在", s: { steady: 2, bank: 1 } },
+        { t: "开心，但会想「那他会不会觉得无聊」", s: { radar: 2, switch: 1 } },
+        { t: "有点复杂，我知道我也有很冷的时候", s: { switch: 2, island: 1 } },
+        { t: "会想，那你也让我安心一点吧", s: { ledger: 2, radar: 1 } }
+      ] },
+
+    { q: "关于「未来」这件事，你的态度是——",
+      opts: [
+        { t: "我会先规划好，然后问他愿不愿意", s: { bank: 2, ledger: 1 } },
+        { t: "顺其自然，但我不会跑", s: { steady: 2, island: 1 } },
+        { t: "很想知道答案，越模糊我越焦虑", s: { radar: 2, bank: 1 } },
+        { t: "别问我这个，我连下周都没想好", s: { island: 2, switch: 1 } }
+      ] },
+
+    { q: "你最怕的关系状态是——",
+      opts: [
+        { t: "一直是我在主动、我在让步", s: { ledger: 2, bank: 1 } },
+        { t: "被绑定，被要求随时在线", s: { island: 2, switch: 1 } },
+        { t: "我照顾的那个人，不需要我了", s: { bank: 2, ledger: 1 } },
+        { t: "太近了，近到我看不见自己", s: { switch: 2, island: 1 } }
+      ] },
+
+    { q: "对方忽然对你特别好，你——",
+      opts: [
+        { t: "开心，但也会想「他是不是做了什么亏心事」", s: { radar: 2, switch: 1 } },
+        { t: "有点不自在，然后下意识退半步", s: { switch: 2, island: 1 } },
+        { t: "接受，并且认真说谢谢", s: { steady: 2, bank: 1 } },
+        { t: "会记下来，想着下次还回去", s: { ledger: 2, bank: 1 } }
+      ] },
+
+    { q: "分开一段时间（出差、异地、各自忙），你——",
+      opts: [
+        { t: "说实话，我适应得挺好", s: { island: 2, switch: 1 } },
+        { t: "会想他，但生活照常", s: { steady: 2, island: 1 } },
+        { t: "我会把他的事情都安排好再走", s: { bank: 2, steady: 1 } },
+        { t: "会不停看手机，等他的消息", s: { radar: 2, bank: 1 } }
+      ] },
+
+    { q: "你希望对方怎么爱你——",
+      opts: [
+        { t: "偶尔也问问我「你累不累」", s: { bank: 2, steady: 1 } },
+        { t: "给我空间，但别走远", s: { island: 2, switch: 1 } },
+        { t: "公平一点，别让我一个人使劲", s: { ledger: 2, radar: 1 } },
+        { t: "在我冷的时候不要走，但也不要逼我", s: { switch: 2, island: 1 } }
+      ] },
+
+    { q: "你觉得「爱」更像——",
+      opts: [
+        { t: "一个可以一直回去的地方", s: { steady: 2, bank: 1 } },
+        { t: "一条需要不断确认的信号", s: { radar: 2, ledger: 1 } },
+        { t: "一个会忽明忽暗的开关", s: { switch: 2, radar: 1 } },
+        { t: "一本要两个人一起记的账", s: { ledger: 2, bank: 1 } }
+      ] }
+  ],
+
+  results: [
+    {
+      id: "steady", name: "恒温型", en: "STEADY", rarity: 15.7,
+      tagline: "不轰烈，但你随时可以回来。",
+      desc: "你是那种让人觉得「稳」的人。你不太会突然消失，也不太会突然爆炸。你知道爱不是一直高浓度，而是低浓度但不间断。你允许对方有自己的空间，也允许自己有情绪——这份松弛，是很多人一辈子在找的东西。",
+      dims: [{ k: "安全感", v: 88 }, { k: "表达需求", v: 62 }, { k: "独立度", v: 71 }, { k: "情绪稳定", v: 86 }, { k: "冲突处理", v: 79 }],
+      like: "雷达型：你的稳定，正好接住 TA 的不安",
+      avoid: "忽冷忽热、用消失来惩罚你的人",
+      traits: ["情绪稳定", "长期主义", "边界健康", "不玩消失"],
+      quote: "我不会每天都热烈，但我每天都会在。",
+      poster: { c1: "#fdf4ef", c2: "#f5e2d6" }
+    },
+    {
+      id: "radar", name: "雷达型", en: "RADAR", rarity: 21.4,
+      tagline: "我不是查岗，我是在确认你还在。",
+      desc: "你的天线一直开着。对方回复慢一点、语气淡一点、标点少一个，你都能立刻捕捉到。你不是不信任，你是太怕被丢下——所以你需要反复确认，而反复确认又让你更累。你要的不是控制，是一句明确的「我在」。",
+      dims: [{ k: "安全感", v: 34 }, { k: "表达需求", v: 91 }, { k: "独立度", v: 42 }, { k: "情绪稳定", v: 38 }, { k: "冲突处理", v: 51 }],
+      like: "恒温型：TA 不会因为你的不安而逃走",
+      avoid: "冷处理、已读不回、说「你想多了」的人",
+      traits: ["高敏捕捉", "需要确认", "怕被丢下", "反复复盘"],
+      quote: "你回我一句就好，我不用你解释。",
+      poster: { c1: "#fdf0f0", c2: "#f6d7da" }
+    },
+    {
+      id: "island", name: "孤岛型", en: "ISLAND", rarity: 19.6,
+      tagline: "我不是不爱你，我是需要先照顾好自己。",
+      desc: "你的第一反应永远是往后退一步。太近了你会窒息，太密了你会想消失。你并不是不需要人，你只是需要确认「我随时可以回到自己的岛上」。给你空间，你会主动游回来；逼你靠近，你会游得更远。",
+      dims: [{ k: "安全感", v: 66 }, { k: "表达需求", v: 31 }, { k: "独立度", v: 93 }, { k: "情绪稳定", v: 68 }, { k: "冲突处理", v: 44 }],
+      like: "恒温型：TA 不追，所以你反而愿意靠近",
+      avoid: "追问、索要回应、把距离当成不爱的人",
+      traits: ["需要空间", "情感自足", "退一步再说", "慢热"],
+      quote: "给我一点距离，我才能靠近你。",
+      poster: { c1: "#f2f2f4", c2: "#dee1e7" }
+    },
+    {
+      id: "bank", name: "充电宝型", en: "POWER BANK", rarity: 22.8,
+      tagline: "我把我有的都给你，然后自己没电了。",
+      desc: "你是那种在关系里自动切换成「照顾者」的人：记得对方的口味、安排好所有细节、在对方累的时候先把自己的事放下。你很少提要求，因为你怕麻烦别人。但你也会有耗尽的一天，而那天你往往什么都不说。",
+      dims: [{ k: "安全感", v: 58 }, { k: "表达需求", v: 46 }, { k: "独立度", v: 52 }, { k: "情绪稳定", v: 74 }, { k: "冲突处理", v: 66 }],
+      like: "记账型：TA 会记得你的付出，并且还回来",
+      avoid: "只接受不回应、把你的好当默认设置的人",
+      traits: ["付出型", "照顾者", "不擅长提要求", "容易耗尽"],
+      quote: "我什么都好，除了我自己。",
+      poster: { c1: "#fdf5e9", c2: "#f5e4c7" }
+    },
+    {
+      id: "switch", name: "开关型", en: "SWITCH", rarity: 18.2,
+      tagline: "我不是不爱了，我是周期到了。",
+      desc: "你的情感像有潮汐：靠近一段时间，就想退开一段；退开之后，又会想念。这不是善变，是你的自我需要定期回到自己的房间里。你怕的不是亲密，是亲密到失去自己。你需要的是一个不会因为你退开就离开的人。",
+      dims: [{ k: "安全感", v: 47 }, { k: "表达需求", v: 55 }, { k: "独立度", v: 79 }, { k: "情绪稳定", v: 51 }, { k: "冲突处理", v: 48 }],
+      like: "恒温型：TA 不会因为你的潮汐而恐慌",
+      avoid: "你一退开就质问、把周期当成不爱的人",
+      traits: ["情感潮汐", "需要独处期", "忽近忽远", "怕失去自我"],
+      quote: "我退开的时候，其实是在确认你会不会留下。",
+      poster: { c1: "#fbf0f6", c2: "#f1dae7" }
+    },
+    {
+      id: "ledger", name: "记账型", en: "LEDGER", rarity: 17.3,
+      tagline: "我不是计较，我只是想要公平。",
+      desc: "你心里有一本账：谁先低头的、谁记得纪念日的、谁总是让步的。你不说，但你记得。这本账不是为了算清，是为了确认「这段关系里，我不是一个人在撑」。你要的其实很简单：被看见，被回应，被同样用力地对待。",
+      dims: [{ k: "安全感", v: 44 }, { k: "表达需求", v: 68 }, { k: "独立度", v: 61 }, { k: "情绪稳定", v: 57 }, { k: "冲突处理", v: 62 }],
+      like: "充电宝型：TA 的付出会让你愿意放下账本",
+      avoid: "理所当然、只享受不投入的人",
+      traits: ["记得细节", "需要公平", "默默比较", "渴望被看见"],
+      quote: "我不要求你多爱我，我只要求你别让我一个人。",
+      poster: { c1: "#fbf3ee", c2: "#efdcd1" }
+    }
+  ]
+});
+</script>
+</body>
+</html>

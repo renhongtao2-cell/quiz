@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b14">
+<title>社交电量表 · 你的社交续航还剩多少</title>
+<meta name="description" content="12 道题，测出你的社交充电方式、续航时长和漏电原因。">
+<link rel="stylesheet" href="../assets/style.css">
+<script src="../assets/license.js"></script>
+</head>
+<body data-theme="volt">
+
+<div class="shell">
+  <div class="topbar" id="topbar">
+    <button class="back" aria-label="上一题">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="brand">社交电量表</div>
+    <div class="counter">01 / 12</div>
+  </div>
+  <div class="progress" id="progress"><i></i></div>
+  <div id="app"></div>
+</div>
+
+<script src="../assets/quiz.js"></script>
+<script>
+createQuiz({
+  slug: "battery",
+  theme: "volt",
+  eyebrow: "SOCIAL BATTERY INDEX",
+  title: "社交<br>电量表",
+  lede: "i 人 e 人太粗糙了。真正决定你社交状态的是三件事：怎么充电、能撑多久、在哪漏电。12 道题，测出你的社交电量模型。",
+  metaMain: "12 道题 · 约 1 分钟",
+  metaExtra: ["6 种充电方式", "可存图", "纯娱乐"],
+  coverList: [
+    "按<b>真实反应</b>选，不要按「理想中的自己」选。",
+    "结果包含<b>续航、充电方式、漏电原因</b>三项指标。",
+    "没有好的类型，只有不同的耗电方式。"
+  ],
+  coverFoot: "本测试为娱乐向内容，不构成任何心理学评估。",
+  resultLabel: "电量报告 · POWER PROFILE",
+  dimLabel: "电量指标",
+  traitsLabel: "耗电特征",
+  posterBrand: "社交电量表",
+  posterLabel: "POWER PROFILE",
+  posterCta: "你的社交电量还剩多少？→",
+  posterFoot: "仅供娱乐 · 请及时充电",
+  posterPairCta: "你们也来测一测 →",
+  hashtags: ["#i人e人", "#社交电量", "#性格测试", "#社恐"],
+
+  questions: [
+    { q: "周五晚上，有人临时叫你出去，你——",
+      opts: [
+        { t: "立刻答应，正好想找人说说话", s: { full: 2, pulse: 1 } },
+        { t: "先问「都有谁」，人不对就不去", s: { saver: 2, reverse: 1 } },
+        { t: "答应了，但只去熟悉的那家店", s: { trickle: 2, saver: 1 } },
+        { t: "说「去！」，出门前已经在算几点能走", s: { pulse: 2, leak: 1 } }
+      ] },
+
+    { q: "一场三小时的饭局结束后，你——",
+      opts: [
+        { t: "还行，路上刷会儿手机就恢复了", s: { saver: 2, trickle: 1 } },
+        { t: "刚才还很嗨，一上车突然一句话都不想说", s: { pulse: 2, leak: 1 } },
+        { t: "挺满足，回家还想再一个人坐一会儿", s: { reverse: 2, saver: 1 } },
+        { t: "脑子嗡嗡的，接下来两天都不想见人", s: { leak: 2, reverse: 1 } }
+      ] },
+
+    { q: "你的理想社交频率是——",
+      opts: [
+        { t: "一个月一两次，但每次都聊到很晚", s: { reverse: 2, trickle: 1 } },
+        { t: "想社交，但每次结束都要缓三天", s: { leak: 2, reverse: 1 } },
+        { t: "一周三四次，越多越好", s: { full: 2, pulse: 1 } },
+        { t: "每周一次，固定那几个人", s: { trickle: 2, saver: 1 } }
+      ] },
+
+    { q: "微信上有人给你发「在吗」，你——",
+      opts: [
+        { t: "看一眼，想好怎么回再回", s: { trickle: 2, saver: 1 } },
+        { t: "秒回，还挺期待接下来聊什么", s: { full: 2, trickle: 1 } },
+        { t: "秒回，但心里希望别聊太久", s: { pulse: 2, saver: 1 } },
+        { t: "先评估一下：这人找我干嘛", s: { saver: 2, reverse: 1 } }
+      ] },
+
+    { q: "在一个陌生的群里，你通常——",
+      opts: [
+        { t: "前几天很活跃，然后就消失了", s: { pulse: 2, full: 1 } },
+        { t: "潜水，除非有人 @ 我", s: { saver: 2, reverse: 1 } },
+        { t: "直接免打扰，需要时再翻", s: { reverse: 2, saver: 1 } },
+        { t: "一条都不敢发，怕接不上话", s: { leak: 2, trickle: 1 } }
+      ] },
+
+    { q: "社交之后的「后遗症」是——",
+      opts: [
+        { t: "会反复回想自己说错的某句话", s: { leak: 2, pulse: 1 } },
+        { t: "有点累，睡一觉就好", s: { trickle: 2, saver: 1 } },
+        { t: "没有，社交反而让我更有劲", s: { full: 2, pulse: 1 } },
+        { t: "需要一个人待半天，才能变回自己", s: { reverse: 2, leak: 1 } }
+      ] },
+
+    { q: "朋友临时取消了约会，你——",
+      opts: [
+        { t: "松一口气，但还是回「好可惜啊」", s: { saver: 2, leak: 1 } },
+        { t: "有点失望，赶紧找别人补上", s: { full: 2, pulse: 1 } },
+        { t: "无所谓，改天再约", s: { trickle: 2, saver: 1 } },
+        { t: "太好了，我本来也在犹豫要不要去", s: { pulse: 2, reverse: 1 } }
+      ] },
+
+    { q: "你更能接受的聚会形式是——",
+      opts: [
+        { t: "两个人，或者干脆不聚", s: { reverse: 2, saver: 1 } },
+        { t: "人越多我越紧张，最好别叫我发言", s: { leak: 2, reverse: 1 } },
+        { t: "一对一，人一多我就插不上话", s: { saver: 2, trickle: 1 } },
+        { t: "大场面也行，我能撑两小时，然后彻底关机", s: { pulse: 2, full: 1 } }
+      ] },
+
+    { q: "需要你上台发言或做展示时，你——",
+      opts: [
+        { t: "挺享受的，甚至有点兴奋", s: { full: 2, pulse: 1 } },
+        { t: "提前一周开始焦虑，前一晚睡不着", s: { leak: 2, trickle: 1 } },
+        { t: "会紧张，但能完成", s: { trickle: 2, saver: 1 } },
+        { t: "能推就推，推不掉就硬着头皮上", s: { reverse: 2, leak: 1 } }
+      ] },
+
+    { q: "你的能量条更像——",
+      opts: [
+        { t: "慢充慢放，续航特别长", s: { trickle: 2, saver: 1 } },
+        { t: "一充就满，一用就空", s: { pulse: 2, full: 1 } },
+        { t: "越用越多的那种", s: { full: 2, trickle: 1 } },
+        { t: "平时省着用，重要场合才开满", s: { saver: 2, reverse: 1 } }
+      ] },
+
+    { q: "有人说你「不好接近」，你——",
+      opts: [
+        { t: "会难过，我其实很想被接近，只是不知道怎么开始", s: { leak: 2, reverse: 1 } },
+        { t: "认了，我确实懒得经营", s: { saver: 2, reverse: 1 } },
+        { t: "有点意外，我明明在聚会上挺能聊的", s: { pulse: 2, full: 1 } },
+        { t: "觉得挺好，省事", s: { reverse: 2, saver: 1 } }
+      ] },
+
+    { q: "一周结束时，你最想做的事是——",
+      opts: [
+        { t: "和最好的朋友吃顿饭", s: { trickle: 2, full: 1 } },
+        { t: "一个人待着，一句话都不说", s: { reverse: 2, saver: 1 } },
+        { t: "谁也别找我，我要关机两天", s: { leak: 2, pulse: 1 } },
+        { t: "约人出去玩，庆祝又活过一周", s: { full: 2, trickle: 1 } }
+      ] }
+  ],
+
+  results: [
+    {
+      id: "full", name: "满电外放", en: "FULL POWER", rarity: 16.8,
+      tagline: "人越多，我越亮。",
+      desc: "你是那种一进房间就能把气氛带起来的人。社交对你不是消耗，是充电——聊得越久你越有精神，回家路上还在回味刚才那个梗。你的能量来自连接，所以独处太久，你会真的变暗。",
+      dims: [{ k: "社交续航", v: 92 }, { k: "独处需求", v: 24 }, { k: "恢复速度", v: 88 }, { k: "情绪外显", v: 81 }, { k: "边界强度", v: 46 }],
+      like: "慢充型：TA 不抢你的场，但接得住你的热度",
+      avoid: "一直泼冷水、把你的热情当吵闹的人",
+      traits: ["社交充电", "场面担当", "话多但不烦", "独处会变暗"],
+      quote: "别让我一个人待太久，我会没电的。",
+      poster: { c1: "#05121a", c2: "#0d3340" }
+    },
+    {
+      id: "trickle", name: "慢充型", en: "TRICKLE CHARGE", rarity: 22.6,
+      tagline: "充电很慢，但续航很长。",
+      desc: "你不擅长快速热络，但一旦熟了，你能陪一个人走很多年。你的社交是低频高质的：一周见一次，一次聊到心里。你不喜欢寒暄，也不喜欢表演热情——你的温度是慢慢升上来的，但升上来就不容易降。",
+      dims: [{ k: "社交续航", v: 62 }, { k: "独处需求", v: 58 }, { k: "恢复速度", v: 64 }, { k: "情绪外显", v: 52 }, { k: "边界强度", v: 71 }],
+      like: "满电型：TA 主动，你负责稳",
+      avoid: "催你「热情一点」、把慢热当冷淡的人",
+      traits: ["慢热", "长情", "低频高质", "讨厌寒暄"],
+      quote: "我熟得很慢，但熟了就不走了。",
+      poster: { c1: "#071018", c2: "#0f2a38" }
+    },
+    {
+      id: "saver", name: "省电模式", en: "POWER SAVER", rarity: 21.3,
+      tagline: "不是不会社交，是不想浪费电。",
+      desc: "你有一整套社交成本核算系统：这场值不值得去、这些人值不值得聊、这句话值不值得说。你能社交，甚至做得很好，但你只在必要时开机。别人觉得你冷淡，其实你只是把电留给了真正重要的人和事。",
+      dims: [{ k: "社交续航", v: 48 }, { k: "独处需求", v: 74 }, { k: "恢复速度", v: 71 }, { k: "情绪外显", v: 34 }, { k: "边界强度", v: 86 }],
+      like: "反向充电型：你们可以一个月不联系，见面还是熟",
+      avoid: "天天要你回应、把「已读」当罪过的人",
+      traits: ["选择性社交", "成本核算", "边界清晰", "低频但靠谱"],
+      quote: "我不是不理你，我是在省电。",
+      poster: { c1: "#050d14", c2: "#0d2430" }
+    },
+    {
+      id: "pulse", name: "脉冲型", en: "PULSE MODE", rarity: 18.4,
+      tagline: "两小时满血，第三小时直接关机。",
+      desc: "你能在聚会里成为最亮的那个，然后在回家的车上突然一句话都不想说。你的能量不是线性消耗，是断崖式下跌——前一秒还在讲段子，后一秒只想消失。所以你需要提前想好退场的方式。",
+      dims: [{ k: "社交续航", v: 41 }, { k: "独处需求", v: 66 }, { k: "恢复速度", v: 33 }, { k: "情绪外显", v: 77 }, { k: "边界强度", v: 58 }],
+      like: "慢充型：TA 不会追问你为什么突然安静",
+      avoid: "拉你去第二场、还说「再玩一会儿嘛」的人",
+      traits: ["断崖式没电", "社交爆发力", "提前退场", "回家失联"],
+      quote: "我不是不想玩，我是真的到点了。",
+      poster: { c1: "#0a0714", c2: "#241a3a" }
+    },
+    {
+      id: "reverse", name: "反向充电", en: "REVERSE CHARGE", rarity: 20.1,
+      tagline: "人越多越空，一个人越满。",
+      desc: "你的充电器插在自己身上。热闹对你不是滋养，是放电；独处不是逃避，是补给。你并不讨厌人，你只是需要大量不被打扰的时间，才能重新变成一个能好好说话的人。",
+      dims: [{ k: "社交续航", v: 26 }, { k: "独处需求", v: 94 }, { k: "恢复速度", v: 78 }, { k: "情绪外显", v: 28 }, { k: "边界强度", v: 88 }],
+      like: "省电模式：你们互不打扰，但都在",
+      avoid: "把独处解读成「你是不是生我气了」的人",
+      traits: ["独处充电", "低社交欲", "自给自足", "需要大量留白"],
+      quote: "我不是不喜欢你，我只是需要先喜欢一下安静。",
+      poster: { c1: "#04090f", c2: "#0b1f2a" }
+    },
+    {
+      id: "leak", name: "漏电型", en: "LEAKAGE", rarity: 17.9,
+      tagline: "聊完很开心，回家复盘到凌晨。",
+      desc: "你不是不喜欢社交，你是社交之后太容易反刍。那句「我是不是说错了」、那个「他当时什么表情」，会在你脑子里循环播放一整晚。你的电不是被社交耗掉的，是被事后的复盘耗掉的。",
+      dims: [{ k: "社交续航", v: 38 }, { k: "独处需求", v: 62 }, { k: "恢复速度", v: 26 }, { k: "情绪外显", v: 44 }, { k: "边界强度", v: 41 }],
+      like: "满电型：TA 的坦荡能把你从复盘里拽出来",
+      avoid: "说话留半句、让你猜来猜去的人",
+      traits: ["社交后遗症", "深夜复盘", "过度自省", "在意别人感受"],
+      quote: "我人已经回家了，脑子还在饭桌上。",
+      poster: { c1: "#100a0d", c2: "#2b1620" }
+    }
+  ]
+});
+</script>
+</body>
+</html>

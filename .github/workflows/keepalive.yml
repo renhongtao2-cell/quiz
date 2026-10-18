@@ -1,0 +1,60 @@
+name: keepalive
+
+# 干两件事：
+# 1. 每天请求一次 Supabase —— 免费版连续 7 天没请求会自动暂停，暂停后网站就打不开
+# 2. 每天往仓库提交一个时间戳 —— GitHub 会在「仓库 60 天没有任何提交」后
+#    自动停用定时任务，提交一次就能一直续命
+#
+# 这两件事加起来，这个站可以真正长期无人值守。
+
+on:
+  schedule:
+    - cron: "17 3 * * *"        # 每天 UTC 03:17（北京时间 11:17）
+  workflow_dispatch:            # 也可以在 Actions 页面手动点一次
+
+permissions:
+  contents: write               # 提交时间戳需要写权限
+
+env:
+  SUPABASE_URL: "https://gqrlyukppptsbtwaxvzv.supabase.co"   # 首尔 ap-northeast-2
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxcmx5dWtwcHB0c2J0d2F4dnp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIzMDQ4MTAsImV4cCI6MjEwNzg4MDgxMH0.IIdrjdNKBpJJrWo6xlayQM3yhoI5BY-gtsHpinKyzxs"
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 叫醒 Supabase
+        id: ping
+        continue-on-error: true
+        run: |
+          code=$(curl -s -o /tmp/out.json -w "%{http_code}" \
+            -X POST "$SUPABASE_URL/rest/v1/rpc/license_check" \
+            -H "Content-Type: application/json" \
+            -H "apikey: $SUPABASE_ANON_KEY" \
+            -H "Authorization: Bearer $SUPABASE_ANON_KEY" \
+            -d '{"p_code":"XHS-KEEP-ALIVE-0000","p_device":"keepalive"}')
+          echo "HTTP $code"
+          cat /tmp/out.json || true
+          echo "code=$code" >> "$GITHUB_OUTPUT"
+
+      - name: 续命定时任务
+        run: |
+          date -u +"%Y-%m-%dT%H:%M:%SZ" > .keepalive
+          git config user.name  "keepalive-bot"
+          git config user.email "keepalive@users.noreply.github.com"
+          git add .keepalive
+          if git diff --staged --quiet; then
+            echo "无变化，跳过提交"
+          else
+            git commit -m "chore: keepalive $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: 检查结果
+        if: steps.ping.outputs.code != '200'
+        run: |
+          echo "::error::Supabase 没响应（HTTP ${{ steps.ping.outputs.code }}）。请检查：1) SUPABASE_URL / SUPABASE_ANON_KEY 是否已替换成真实值；2) 项目是否已被暂停，需要去控制台点 Restore。"
+          exit 1
